@@ -83,16 +83,9 @@ public class FirebaseMessaging : MonoBehaviour
         //    DateTime.Now.AddSeconds(30)
         //    );
 
-        AndroidNotification notification = new()
-        {
-            Title = e.Message.Notification.Title,
-            Text = e.Message.Notification.Body,
-            FireTime = DateTime.Now.AddMinutes(0.5f),
-            ShouldAutoCancel = true,
-            SmallIcon = "ic_stat_ic_notification"
-        };
-
-        AndroidNotificationCenter.SendNotification(notification, CHANNEL_ID);
+        ShowNotification(e.Message.Notification.Title,
+            e.Message.Notification.Body,
+            DateTime.Now.AddMinutes(0.5f));
     }
 
     public void RequestNotificationPermission()
@@ -110,5 +103,19 @@ public class FirebaseMessaging : MonoBehaviour
         var request = NotificationCenter.RequestPermission();
         if (request.Status == NotificationsPermissionStatus.RequestPending)
             yield return request;
+    }
+
+    public void ShowNotification(string title, string body, DateTime time, bool autoCancel = true)
+    {
+        AndroidNotification notification = new()
+        {
+            Title = title,
+            Text = body,
+            FireTime = time,
+            ShouldAutoCancel = true,
+            SmallIcon = "ic_stat_ic_notification"
+        };
+
+        AndroidNotificationCenter.SendNotification(notification, CHANNEL_ID);
     }
 }

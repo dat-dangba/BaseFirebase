@@ -1,0 +1,17 @@
+{
+	"name": "BaseFirebase",
+	"references": [
+		"BaseUnity",
+		"AutoReference",
+		"Unity.Notifications.Android",
+		"Unity.Notifications.Unified"
+	],
+	"includePlatforms": [],
+	"excludePlatforms": [],
+	"allowUnsafeCode": false,
+	"overrideReferences": false,
+	"precompiledReferences": [],
+	"autoReferenced": true,
+	"defineConstraints": [],
+	"versionDefines": []
+}
