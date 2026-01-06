@@ -1,0 +1,15 @@
+{
+  "name": "com.datdb.firebase",
+  "displayName": "DBD-Firebase",
+  "description": "Firebase",
+  "author": "datdb",
+  "version": "1.0.0",
+  "website": "https://github.com/dat-dangba/BaseFirebase",
+  "samples": [
+    {
+      "displayName": "Firebase Sample",
+      "description": "Firebase Sample",
+      "path": "Samples~/Firebase Sample"
+    }
+  ]
+}
