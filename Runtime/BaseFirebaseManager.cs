@@ -133,6 +133,23 @@ public abstract class BaseFirebaseManager<INSTANCE, REMOTE_CONFIG_DATA> : MonoBe
     }
 
     /// <summary>
+    /// gọi khi request consent thành công 
+    /// </summary>
+    public virtual void FirebaseAnalyticsConsent()
+    {
+        if (!IsInitialized) return;
+
+        Dictionary<ConsentType, ConsentStatus> consentDict = new()
+        {
+            { ConsentType.AnalyticsStorage, ConsentStatus.Granted },
+            { ConsentType.AdStorage, ConsentStatus.Granted },
+            { ConsentType.AdUserData, ConsentStatus.Granted },
+            { ConsentType.AdPersonalization, ConsentStatus.Granted }
+        };
+        FirebaseAnalytics.SetConsent(consentDict);
+    }
+
+    /// <summary>
     /// ko dùng cho Admob, vì admob tự động log 
     /// </summary>
     /// <param name="adPlatform"></param>
