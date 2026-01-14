@@ -1,8 +1,7 @@
-using System;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace FirebaseSample
+namespace DBD.Firebase.Sample
 {
     public class Test : MonoBehaviour
     {

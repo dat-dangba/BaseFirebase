@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using Firebase.Messaging;
 using Firebase.RemoteConfig;
 using Newtonsoft.Json;
-using UnityEngine;
 
-namespace FirebaseSample
+namespace DBD.Firebase.Sample
 {
     public class FirebaseManager : BaseFirebaseManager<FirebaseManager, RemoteConfigData>
     {

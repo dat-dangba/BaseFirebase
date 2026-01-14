@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FirebaseSample
+namespace DBD.Firebase.Sample
 {
     [Serializable]
     public class RemoteConfigData

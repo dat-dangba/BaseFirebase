@@ -1,6 +1,6 @@
 using System;
 
-namespace FirebaseSample
+namespace DBD.Firebase.Sample
 {
     [Serializable]
     public class TestModel

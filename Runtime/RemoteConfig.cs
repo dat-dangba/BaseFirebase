@@ -6,129 +6,132 @@ using Firebase.RemoteConfig;
 using Newtonsoft.Json;
 using UnityEngine;
 
-public sealed class RemoteConfig : MonoBehaviour
+namespace DBD.Firebase
 {
-    private event Action<FirebaseRemoteConfig> OnConfigUpdate;
-
-    public void Init(Dictionary<string, object> defaults)
+    public sealed class RemoteConfig : MonoBehaviour
     {
-        Debug.LogWarning($"remote config - FirebaseRemoteConfig Init");
-        SetDefaultData(defaults);
+        private event Action<FirebaseRemoteConfig> OnConfigUpdate;
 
-        SetConfigSetting(FetchAndActivate);
-    }
-
-    public void SetConfigUpdateListener(Action<FirebaseRemoteConfig> OnConfigUpdate)
-    {
-        this.OnConfigUpdate = OnConfigUpdate;
-    }
-
-    private void FetchAndActivate()
-    {
-        FirebaseRemoteConfig.DefaultInstance.FetchAndActivateAsync().ContinueWithOnMainThread(
-            task =>
-            {
-                Debug.LogWarning($"remote config - Fetch And Activate Data {task.Result} {task.Status}");
-                UpdateDate();
-                FirebaseRemoteConfig.DefaultInstance.OnConfigUpdateListener +=
-                    OnConfigUpdateListener;
-            });
-    }
-
-    private void OnDestroy()
-    {
-        FirebaseRemoteConfig.DefaultInstance.OnConfigUpdateListener -= OnConfigUpdateListener;
-    }
-
-    private void SetConfigSetting(Action OnSetConfigSettingsComplete)
-    {
-        var configSettings = new ConfigSettings
+        public void Init(Dictionary<string, object> defaults)
         {
-            MinimumFetchIntervalInMilliseconds = 0
-        };
+            Debug.LogWarning($"remote config - FirebaseRemoteConfig Init");
+            SetDefaultData(defaults);
 
-        FirebaseRemoteConfig.DefaultInstance.SetConfigSettingsAsync(configSettings)
-            .ContinueWithOnMainThread(_ => { OnSetConfigSettingsComplete?.Invoke(); });
-    }
-
-    private void SetDefaultData(Dictionary<string, object> defaults)
-    {
-        FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(defaults)
-            .ContinueWithOnMainThread(task =>
-            {
-                Debug.LogWarning($"remote config - Set Default Data {task.Status}");
-                UpdateDate(true);
-            });
-    }
-
-    private void OnConfigUpdateListener(object sender, ConfigUpdateEventArgs e)
-    {
-        if (e.Error != RemoteConfigError.None)
-        {
-            return;
+            SetConfigSetting(FetchAndActivate);
         }
 
-        FirebaseRemoteConfig.DefaultInstance.ActivateAsync()
-            .ContinueWithOnMainThread(task =>
-            {
-                Debug.LogWarning($"remote config - Update Data {task.Result} {task.Status}");
-                if (task.Result)
+        public void SetConfigUpdateListener(Action<FirebaseRemoteConfig> OnConfigUpdate)
+        {
+            this.OnConfigUpdate = OnConfigUpdate;
+        }
+
+        private void FetchAndActivate()
+        {
+            FirebaseRemoteConfig.DefaultInstance.FetchAndActivateAsync().ContinueWithOnMainThread(
+                task =>
                 {
+                    Debug.LogWarning($"remote config - Fetch And Activate Data {task.Result} {task.Status}");
                     UpdateDate();
-                }
-            });
-    }
-
-    private void UpdateDate(bool isSetDefault = false)
-    {
-        Debug.LogWarning($"remote config - {isSetDefault}");
-        if (!isSetDefault)
-        {
-            OnConfigUpdate?.Invoke(FirebaseRemoteConfig.DefaultInstance);
-        }
-    }
-
-    public T GetDateRemoteConfig<T>() where T : class, new()
-    {
-        var allValues = FirebaseRemoteConfig.DefaultInstance.AllValues;
-
-        T t = new T();
-        Type type = typeof(T);
-
-        foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
-        {
-            if (!allValues.TryGetValue(field.Name, out var value))
-                continue;
-
-            object parsedValue = ConvertValue(value, field.FieldType);
-
-            if (parsedValue != null)
-                field.SetValue(t, parsedValue);
+                    FirebaseRemoteConfig.DefaultInstance.OnConfigUpdateListener +=
+                        OnConfigUpdateListener;
+                });
         }
 
-        return t;
-    }
+        private void OnDestroy()
+        {
+            FirebaseRemoteConfig.DefaultInstance.OnConfigUpdateListener -= OnConfigUpdateListener;
+        }
 
-    private object ConvertValue(ConfigValue value, Type targetType)
-    {
-        if (targetType == typeof(bool))
-            return value.BooleanValue;
+        private void SetConfigSetting(Action OnSetConfigSettingsComplete)
+        {
+            var configSettings = new ConfigSettings
+            {
+                MinimumFetchIntervalInMilliseconds = 0
+            };
 
-        if (targetType == typeof(int))
-            return (int)value.LongValue;
+            FirebaseRemoteConfig.DefaultInstance.SetConfigSettingsAsync(configSettings)
+                .ContinueWithOnMainThread(_ => { OnSetConfigSettingsComplete?.Invoke(); });
+        }
 
-        if (targetType == typeof(long))
-            return value.LongValue;
+        private void SetDefaultData(Dictionary<string, object> defaults)
+        {
+            FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(defaults)
+                .ContinueWithOnMainThread(task =>
+                {
+                    Debug.LogWarning($"remote config - Set Default Data {task.Status}");
+                    UpdateDate(true);
+                });
+        }
 
-        if (targetType == typeof(float))
-            return (float)value.DoubleValue;
+        private void OnConfigUpdateListener(object sender, ConfigUpdateEventArgs e)
+        {
+            if (e.Error != RemoteConfigError.None)
+            {
+                return;
+            }
 
-        if (targetType == typeof(double))
-            return value.DoubleValue;
+            FirebaseRemoteConfig.DefaultInstance.ActivateAsync()
+                .ContinueWithOnMainThread(task =>
+                {
+                    Debug.LogWarning($"remote config - Update Data {task.Result} {task.Status}");
+                    if (task.Result)
+                    {
+                        UpdateDate();
+                    }
+                });
+        }
 
-        if (targetType == typeof(string))
-            return value.StringValue;
+        private void UpdateDate(bool isSetDefault = false)
+        {
+            Debug.LogWarning($"remote config - {isSetDefault}");
+            if (!isSetDefault)
+            {
+                OnConfigUpdate?.Invoke(FirebaseRemoteConfig.DefaultInstance);
+            }
+        }
 
-        return JsonConvert.DeserializeObject(value.StringValue, targetType);
+        public T GetDateRemoteConfig<T>() where T : class, new()
+        {
+            var allValues = FirebaseRemoteConfig.DefaultInstance.AllValues;
+
+            T t = new T();
+            Type type = typeof(T);
+
+            foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (!allValues.TryGetValue(field.Name, out var value))
+                    continue;
+
+                object parsedValue = ConvertValue(value, field.FieldType);
+
+                if (parsedValue != null)
+                    field.SetValue(t, parsedValue);
+            }
+
+            return t;
+        }
+
+        private object ConvertValue(ConfigValue value, Type targetType)
+        {
+            if (targetType == typeof(bool))
+                return value.BooleanValue;
+
+            if (targetType == typeof(int))
+                return (int)value.LongValue;
+
+            if (targetType == typeof(long))
+                return value.LongValue;
+
+            if (targetType == typeof(float))
+                return (float)value.DoubleValue;
+
+            if (targetType == typeof(double))
+                return value.DoubleValue;
+
+            if (targetType == typeof(string))
+                return value.StringValue;
+
+            return JsonConvert.DeserializeObject(value.StringValue, targetType);
+        }
     }
 }

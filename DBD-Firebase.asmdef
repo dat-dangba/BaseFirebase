@@ -1,6 +1,6 @@
 {
-    "name": "Firebase",
-    "rootNamespace": "",
+    "name": "DBD-Firebase",
+    "rootNamespace": "DBD.Firebase",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
