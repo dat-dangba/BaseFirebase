@@ -19,7 +19,9 @@ namespace DBD.Firebase
 
         [SerializeField] private RemoteConfig remoteConfig;
 
-        public REMOTE_CONFIG_DATA RemoteConfigData { get; private set; }
+        [SerializeField] private REMOTE_CONFIG_DATA remoteConfigData;
+        public REMOTE_CONFIG_DATA RemoteConfigData => remoteConfigData;
+
         public bool IsInitialized { get; private set; }
 
         public static Action<REMOTE_CONFIG_DATA> OnRemoteConfigUpdateData;
@@ -111,8 +113,8 @@ namespace DBD.Firebase
 
         protected virtual void OnRemoteConfigUpdate(FirebaseRemoteConfig firebaseRemoteConfig)
         {
-            RemoteConfigData = remoteConfig.GetDateRemoteConfig<REMOTE_CONFIG_DATA>();
-            OnRemoteConfigUpdateData?.Invoke(RemoteConfigData);
+            remoteConfigData = remoteConfig.GetDateRemoteConfig<REMOTE_CONFIG_DATA>();
+            OnRemoteConfigUpdateData?.Invoke(remoteConfigData);
         }
 
         protected virtual void OnMessageReceived(object sender, MessageReceivedEventArgs e)
