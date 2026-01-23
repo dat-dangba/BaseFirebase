@@ -4,6 +4,7 @@ using Firebase;
 using Firebase.Analytics;
 using Firebase.Messaging;
 using Firebase.RemoteConfig;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace DBD.Firebase
@@ -121,7 +122,10 @@ namespace DBD.Firebase
 
         protected virtual Dictionary<string, object> GetRemoteConfigDefaultValue()
         {
-            return new Dictionary<string, object>();
+            var data = new REMOTE_CONFIG_DATA();
+            string json = JsonConvert.SerializeObject(data);
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            return dict;
         }
 
         public virtual void LogEvent(string name, params Parameter[] parameters)
