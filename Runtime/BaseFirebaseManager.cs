@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Firebase;
 using Firebase.Analytics;
 using Firebase.Messaging;
 using Firebase.RemoteConfig;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace DBD.Firebase
@@ -22,6 +23,8 @@ namespace DBD.Firebase
         public bool IsInitialized { get; private set; }
 
         public static Action<REMOTE_CONFIG_DATA> OnRemoteConfigUpdateData;
+
+        protected abstract int GetVersion();
 
         protected virtual void Reset()
         {
@@ -122,9 +125,14 @@ namespace DBD.Firebase
 
         protected virtual Dictionary<string, object> GetRemoteConfigDefaultValue()
         {
+            // var data = new REMOTE_CONFIG_DATA();
+            // string json = JsonConvert.SerializeObject(data);
+            // var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            // return dict;
             var data = new REMOTE_CONFIG_DATA();
-            string json = JsonConvert.SerializeObject(data);
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            var dict = data.GetType()
+                .GetFields(BindingFlags.Public | BindingFlags.Instance)
+                .ToDictionary(f => $"{f.Name}_v{GetVersion()}", f => f.GetValue(data));
             return dict;
         }
 
