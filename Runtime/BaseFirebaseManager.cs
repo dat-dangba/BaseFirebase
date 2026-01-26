@@ -107,7 +107,7 @@ namespace DBD.Firebase
         {
             FirebaseMessaging.TokenReceived += OnTokenReceived;
             FirebaseMessaging.MessageReceived += OnMessageReceived;
-            remoteConfig.Init(GetRemoteConfigDefaultValue());
+            remoteConfig.Init(GetRemoteConfigDefaultValue(), GetVersion());
             remoteConfig.SetConfigUpdateListener(OnRemoteConfigUpdate);
         }
 
