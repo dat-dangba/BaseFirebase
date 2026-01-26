@@ -12,9 +12,12 @@ namespace DBD.Firebase
     {
         private event Action<FirebaseRemoteConfig> OnConfigUpdate;
 
-        public void Init(Dictionary<string, object> defaults)
+        private int version = 1;
+
+        public void Init(Dictionary<string, object> defaults, int version)
         {
             Debug.LogWarning($"remote config - FirebaseRemoteConfig Init");
+            this.version = version;
             SetDefaultData(defaults);
 
             SetConfigSetting(FetchAndActivate);
@@ -99,7 +102,7 @@ namespace DBD.Firebase
 
             foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
-                if (!allValues.TryGetValue(field.Name, out var value))
+                if (!allValues.TryGetValue($"{field.Name}_v{version}", out var value))
                     continue;
 
                 object parsedValue = ConvertValue(value, field.FieldType);
