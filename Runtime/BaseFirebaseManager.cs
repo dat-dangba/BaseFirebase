@@ -171,8 +171,8 @@ namespace DBD.Firebase
         /// <param name="adPlatform"></param>
         /// <param name="adFormat"></param>
         /// <param name="revenue"></param>
-        /// <param name="adPos"></param>
-        public virtual void AdRevenue(string adPlatform, string adFormat, double revenue, string adPos)
+        /// <param name="adPlacement"></param>
+        public virtual void AdRevenue(string adPlatform, string adFormat, double revenue, string adPlacement)
         {
             if (!IsInitialized)
             {
@@ -185,7 +185,7 @@ namespace DBD.Firebase
                 new Parameter("ad_format", adFormat), // open_app, interstitial...
                 new Parameter("value", revenue),
                 new Parameter("currency", "USD"),
-                new Parameter("ad_position", adPos) // quang cao tai vi tri nao
+                new Parameter("ad_placement", adPlacement) // quang cao tai vi tri nao
             };
 
             FirebaseAnalytics.LogEvent("ad_impression", impressionParameters);
