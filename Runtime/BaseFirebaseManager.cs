@@ -39,7 +39,7 @@ namespace DBD.Firebase
             {
                 Instance = GetComponent<INSTANCE>();
 
-                CheckAndFixDependencies();
+                // CheckAndFixDependencies();
 
                 Transform root = transform.root;
                 if (root != transform)
@@ -83,7 +83,7 @@ namespace DBD.Firebase
             FirebaseMessaging.MessageReceived -= OnMessageReceived;
         }
 
-        private void CheckAndFixDependencies()
+        public void CheckAndFixDependencies()
         {
             IsInitialized = false;
 
