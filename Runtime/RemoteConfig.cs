@@ -102,13 +102,16 @@ namespace DBD.Firebase
 
             foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
-                if (!allValues.TryGetValue($"{field.Name}_v{version}", out var value))
+                string key = $"{field.Name}_v{version}";
+                if (!allValues.TryGetValue(key, out var value))
                     continue;
 
                 object parsedValue = ConvertValue(value, field.FieldType);
 
                 if (parsedValue != null)
+                {
                     field.SetValue(t, parsedValue);
+                }
             }
 
             return t;
