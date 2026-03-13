@@ -87,7 +87,7 @@ namespace DBD.Firebase
         public void CheckAndFixDependencies()
         {
             IsInitialized = false;
-
+            remoteConfigData = new REMOTE_CONFIG_DATA();
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
             {
                 var dependencyStatus = task.Result;
