@@ -87,10 +87,10 @@ namespace DBD.Firebase
         private void UpdateDate(bool isSetDefault = false)
         {
             Debug.LogWarning($"remote config - {isSetDefault}");
-            if (!isSetDefault)
-            {
-                OnConfigUpdate?.Invoke(FirebaseRemoteConfig.DefaultInstance);
-            }
+            // if (!isSetDefault)
+            // {
+            OnConfigUpdate?.Invoke(FirebaseRemoteConfig.DefaultInstance);
+            // }
         }
 
         public T GetDateRemoteConfig<T>() where T : class, new()
